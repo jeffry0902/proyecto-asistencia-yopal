@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-n3be#52(gadmpaq2tkhv#qz^g8!(7%!0j9+mxh%x+-droxf49t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.tu-dominio.com', 'tu-dominio.com']
-
+ALLOWED_HOSTS = ['proyecto-asistencia-yopal.onrender.com']
 # Application definition
 
 INSTALLED_APPS = [
