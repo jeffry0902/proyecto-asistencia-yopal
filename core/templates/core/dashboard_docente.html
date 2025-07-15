@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Bienvenido, {{ request.user.first_name }} {{ request.user.last_name }}</h1>
+            <h1>Panel de Docente</h1>
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
@@ -22,13 +22,13 @@
                     <div class="card-header">
                         <h3>Tomar Asistencia del Día</h3>
                     </div>
-                    <div class="list-group list-group-flush">
-                        {% for curso in cursos %}
-                            <a href="{% url 'seleccionar_fecha' curso.id %}" class="list-group-item list-group-item-action">
-                                {{ curso.nombre }}
+                    <div class="card-body">
+                        {% for asignacion in asignaciones %}
+                            <a href="{% url 'seleccionar_fecha' asignacion.id %}" class="btn btn-primary d-block mb-2">
+                                {{ asignacion.grupo.nombre }} - {{ asignacion.materia.nombre }}
                             </a>
                         {% empty %}
-                            <li class="list-group-item">No tienes cursos asignados.</li>
+                            <p>No tienes asignaciones de materias y grupos.</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -39,13 +39,13 @@
                     <div class="card-header">
                         <h3>Visualizar Historial de Asistencia</h3>
                     </div>
-                    <div class="list-group list-group-flush">
-                        {% for curso in cursos %}
-                            <a href="{% url 'historial_asistencia' curso.id %}" class="list-group-item list-group-item-action">
-                                {{ curso.nombre }}
+                    <div class="card-body">
+                        {% for asignacion in asignaciones %}
+                            <a href="{% url 'historial_asistencia' asignacion.id %}" class="btn btn-primary d-block mb-2">
+                                {{ asignacion.grupo.nombre }} - {{ asignacion.materia.nombre }}
                             </a>
                         {% empty %}
-                            <li class="list-group-item">No tienes cursos asignados.</li>
+                            <p>No tienes asignaciones de materias y grupos.</p>
                         {% endfor %}
                     </div>
                 </div>

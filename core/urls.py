@@ -13,7 +13,8 @@ urlpatterns = [
     path('dashboard/docente/', views.dashboard_docente_view, name='dashboard_docente'),
     path('dashboard/coordinador_rector/', views.dashboard_coordinador_rector_view, name='dashboard_coordinador_rector'),
     
-    path('seleccionar-fecha/<int:curso_id>/', views.seleccionar_fecha_view, name='seleccionar_fecha'),
-    path('asistencia/<int:curso_id>/', views.lista_asistencia_view, name='lista_asistencia'),
-    path('historial/<int:curso_id>/', views.historial_asistencia_view, name='historial_asistencia'),
+    path('seleccionar-fecha/<int:asignacion_id>/', views.seleccionar_fecha_view, name='seleccionar_fecha'),
+    path('asistencia/<int:asignacion_id>/', views.lista_asistencia_view, name='lista_asistencia'),
+    path('historial/<int:asignacion_id>/', views.historial_asistencia_view, name='historial_asistencia'),
+    path('historial/grupo/<int:grupo_id>/', views.historial_grupo_view, name='historial_grupo'),
 ]

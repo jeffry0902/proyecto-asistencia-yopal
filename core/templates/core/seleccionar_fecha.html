@@ -11,10 +11,11 @@
         <div class="card mx-auto" style="max-width: 500px;">
             <div class="card-header">
                 <h3>Seleccionar Fecha para Asistencia</h3>
-                <h5>Curso: {{ curso.nombre }}</h5>
+                <h5>Grupo: {{ asignacion.grupo.nombre }}</h5>
+                <h6>Materia: {{ asignacion.materia.nombre }}</h6>
             </div>
             <div class="card-body">
-                <form action="{% url 'lista_asistencia' curso.id %}" method="get">
+                <form action="{% url 'lista_asistencia' asignacion.id %}" method="get">
                     <div class="mb-3">
                         <label for="fecha" class="form-label">Fecha:</label>
                         <input type="date" class="form-control" id="fecha" name="fecha" required>

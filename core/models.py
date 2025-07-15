@@ -11,28 +11,39 @@ class CustomUser(AbstractUser):
     )
     rol = models.CharField(max_length=15, choices=ROLES, default='docente')
 
-class Estudiante(models.Model):
-    nombre_completo = models.CharField(max_length=200)
-    codigo_estudiantil = models.CharField(max_length=50, unique=True, blank=True, null=True)
-    # LA LÍNEA 'cursos = models.ManyToManyField...' HA SIDO ELIMINADA DE AQUÍ.
-
-    def __str__(self):
-        return self.nombre_completo
-
-class Curso(models.Model):
+# RENOMBRAMOS 'Curso' a 'Grupo'
+class Grupo(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
-    # El campo 'docentes' ahora está aquí
-    docentes = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        limit_choices_to={'rol': 'docente'},
-        blank=True,
-        related_name='cursos_asignados'
-    )
-    # Y también el campo 'estudiantes'
-    estudiantes = models.ManyToManyField(Estudiante, blank=True, related_name='cursos')
+    estudiantes = models.ManyToManyField('Estudiante', blank=True, related_name='grupos')
 
     def __str__(self):
         return self.nombre
+
+# NUEVO MODELO para las materias
+class Materia(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nombre
+
+# NUEVO MODELO para conectar todo
+class Asignacion(models.Model):
+    docente = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'rol': 'docente'})
+    materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
+    grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('docente', 'materia', 'grupo')
+
+    def __str__(self):
+        return f"{self.docente.username} - {self.materia.nombre} ({self.grupo.nombre})"
+
+class Estudiante(models.Model):
+    nombre_completo = models.CharField(max_length=200)
+    codigo_estudiantil = models.CharField(max_length=50, unique=True, blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre_completo
 
 class Asistencia(models.Model):
     ESTADOS = (
@@ -43,14 +54,14 @@ class Asistencia(models.Model):
         ('evadido', 'Evadido'),
     )
 
+    # AHORA LA ASISTENCIA SE LIGA A UNA ASIGNACIÓN ESPECÍFICA
+    asignacion = models.ForeignKey(Asignacion, on_delete=models.CASCADE)
     estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
-    curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
-    docente = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fecha = models.DateField()
     estado = models.CharField(max_length=10, choices=ESTADOS)
 
     class Meta:
-        unique_together = ('estudiante', 'curso', 'fecha', 'docente')
+        unique_together = ('asignacion', 'estudiante', 'fecha')
 
     def __str__(self):
-        return f"{self.estudiante.nombre_completo} - {self.curso.nombre} - {self.docente.username} - {self.fecha} ({self.get_estado_display()})"
+        return f"{self.estudiante.nombre_completo} - {self.asignacion} - {self.fecha}"
